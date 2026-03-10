@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的开发工具导航 | DunYiWang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .tool-card { transition: all 0.3s ease; }
+        .tool-card:hover { transform: translateY(-4px); }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-compass text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-white">DunYiWang</h1>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">个人开发工具导航</p>
+                    </div>
+                </div>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="relative max-w-2xl mx-auto">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="搜索工具..." 
+                class="w-full px-6 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                oninput="filterTools()"
+            >
+            <i class="fas fa-search absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12" id="toolsContainer">
+        <!-- Tools will be rendered here by JavaScript -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div class="max-w-7xl mx-auto px-4 py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
+            <p>© 2024 DunYiWang | Built with <i class="fas fa-heart text-red-500"></i> for developers</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tool Data - Easy to extend!
+        const toolsData = [
+            {
+                category: "AI 模型",
+                icon: "fa-robot",
+                color: "purple",
+                items: [
+                    { name: "通义千问", url: "https://www.qianwen.com/chat?source=tongyigw", desc: "阿里巴巴大模型", icon: "fa-comments" },
+                    { name: "Kimi", url: "https://www.kimi.com/", desc: "月之暗面长文本AI", icon: "fa-moon" },
+                    { name: "豆包", url: "https://www.doubao.com/chat/", desc: "字节跳动AI助手", icon: "fa-cookie" },
+                    { name: "ChatGPT", url: "https://chat.openai.com", desc: "OpenAI对话模型", icon: "fa-brain" }
+                ]
+            },
+            {
+                category: "RSS订阅",
+                icon: "fa-rss",
+                color: "indigo",
+                items: [
+                    { name: "Feedly", url: "https://feedly.com/i/my/me", desc: "feedly rss", icon: "fa-rss" },
+                    { name: "GitHub", url: "https://github.com/", desc: "github home", icon: "fa-github" },
+                    { name: "GitHubTrending", url: "https://github.com/trending", desc: "github trendind", icon: "fa-github-alt" },
+                    { name: "GitHubBlog", url: "https://github.blog/", desc: "github blog", icon: "fa-github-alt" },
+                    { name: "GitHubExplore", url: "https://github.com/explore", desc: "github explore", icon: "fa-github-alt" }
+                ]
+            },
+            {
+                category: "画图工具",
+                icon: "fa-paint-brush",
+                color: "pink",
+                items: [
+                    { name: "Excalidraw", url: "https://excalidraw.com/", desc: "手绘风格流程图", icon: "fa-pencil-alt" },
+                    { name: "ProcessOn", url: "https://www.processon.com/diagrams", desc: "在线流程图工具", icon: "fa-diagram-project" },
+                    { name: "MindLine", url: "https://www.mindline.cn/webapp", desc: "在线思维导图工具", icon: "fa-brain" }
+                ]
+            },
+            {
+                category: "开发辅助工具",
+                icon: "fa-tools",
+                color: "blue",
+                items: [
+                    { name: "JSON.cn", url: "https://www.json.cn/", desc: "JSON格式化验证", icon: "fa-check-circle" }
+                ]
+            },
+
+            {
+                category: "ICON",
+                icon: "fa-arrow-pointer",
+                color: "orange",
+                items: [
+                    { name: "fontawesome", url: "https://fontawesome.com/search", desc: "icon 平台", icon: "fa-font-awesome" }
+                ]
+            }
+        ];
+
+        // Render Tools
+        function renderTools(data = toolsData) {
+            const container = document.getElementById('toolsContainer');
+            container.innerHTML = '';
+
+            data.forEach(category => {
+                if (category.items.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = 'mb-10';
+                
+                const colorClasses = {
+                    purple: 'text-purple-600 bg-purple-50 dark:bg-purple-900/20',
+                    pink: 'text-pink-600 bg-pink-50 dark:bg-pink-900/20',
+                    blue: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20',
+                    indigo: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20',
+                    orange: 'text-orange-600 bg-orange-50 dark:bg-orange-900/20',
+                    green: 'text-green-600 bg-green-50 dark:bg-green-900/20'
+                };
+
+                const colorClass = colorClasses[category.color] || colorClasses.blue;
+
+                section.innerHTML = `
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl ${colorClass} flex items-center justify-center">
+                            <i class="fas ${category.icon} text-xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">${category.category}</h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        ${category.items.map(item => `
+                            <a href="${item.url}" target="_blank" rel="noopener noreferrer" 
+                               class="tool-card group bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 block">
+                                <div class="flex items-start justify-between mb-3">
+                                    <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 transition">
+                                        <i class="fas ${item.icon} text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400"></i>
+                                    </div>
+                                    <i class="fas fa-external-link-alt text-gray-300 dark:text-gray-600 group-hover:text-blue-500 text-sm"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">${item.name}</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">${item.desc}</p>
+                            </a>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        // Filter Tools
+        function filterTools() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                renderTools(toolsData);
+                return;
+            }
+
+            const filtered = toolsData.map(category => ({
+                ...category,
+                items: category.items.filter(item => 
+                    item.name.toLowerCase().includes(searchTerm) || 
+                    item.desc.toLowerCase().includes(searchTerm)
+                )
+            })).filter(category => category.items.length > 0);
+
+            renderTools(filtered);
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize Dark Mode
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Initial Render
+        renderTools();
+    </script>
+</body>
+</html>
